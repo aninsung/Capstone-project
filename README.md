@@ -1,2 +1,2 @@
-# -Capstone-project
+# Capstone-project
 졸프
