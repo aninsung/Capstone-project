@@ -1,0 +1,2079 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "청년 정책 AI 계약 초안",
+    "description": "1주 차 계약 검토용. 분석·인덱스 API는 501을 반환합니다.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ai/v1/recommendations": {
+      "post": {
+        "summary": "Recommendations",
+        "operationId": "recommendations_ai_v1_recommendations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecommendationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST"
+          },
+          "401": {
+            "description": "UNAUTHENTICATED"
+          },
+          "422": {
+            "description": "ANALYSIS_INPUT_INCOMPLETE"
+          },
+          "501": {
+            "description": "1주 차 계약만 제공"
+          },
+          "503": {
+            "description": "서비스 토큰 미설정"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/ai/v1/eligibility-analyses": {
+      "post": {
+        "summary": "Eligibility-Analyses",
+        "operationId": "eligibility_analyses_ai_v1_eligibility_analyses_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EligibilityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EligibilityResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST"
+          },
+          "401": {
+            "description": "UNAUTHENTICATED"
+          },
+          "422": {
+            "description": "ANALYSIS_INPUT_INCOMPLETE"
+          },
+          "501": {
+            "description": "1주 차 계약만 제공"
+          },
+          "503": {
+            "description": "서비스 토큰 미설정"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/ai/v1/duplicate-benefit-analyses": {
+      "post": {
+        "summary": "Duplicate-Benefit-Analyses",
+        "operationId": "duplicate_benefit_analyses_ai_v1_duplicate_benefit_analyses_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DuplicateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DuplicateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST"
+          },
+          "401": {
+            "description": "UNAUTHENTICATED"
+          },
+          "422": {
+            "description": "ANALYSIS_INPUT_INCOMPLETE"
+          },
+          "501": {
+            "description": "1주 차 계약만 제공"
+          },
+          "503": {
+            "description": "서비스 토큰 미설정"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/ai/v1/scenario-analyses": {
+      "post": {
+        "summary": "Scenario-Analyses",
+        "operationId": "scenario_analyses_ai_v1_scenario_analyses_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST"
+          },
+          "401": {
+            "description": "UNAUTHENTICATED"
+          },
+          "422": {
+            "description": "ANALYSIS_INPUT_INCOMPLETE"
+          },
+          "501": {
+            "description": "1주 차 계약만 제공"
+          },
+          "503": {
+            "description": "서비스 토큰 미설정"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/ai/v1/consultations": {
+      "post": {
+        "summary": "Consultations",
+        "operationId": "consultations_ai_v1_consultations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/SearchRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/QARequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PersonalizedRequest"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/SearchResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AnswerResponse"
+                    }
+                  ],
+                  "title": "Response Consultations Ai V1 Consultations Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST"
+          },
+          "401": {
+            "description": "UNAUTHENTICATED"
+          },
+          "422": {
+            "description": "ANALYSIS_INPUT_INCOMPLETE"
+          },
+          "501": {
+            "description": "1주 차 계약만 제공"
+          },
+          "503": {
+            "description": "서비스 토큰 미설정"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/ai/v1/policy-verifications": {
+      "post": {
+        "summary": "Policy-Verifications",
+        "operationId": "policy_verifications_ai_v1_policy_verifications_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST"
+          },
+          "401": {
+            "description": "UNAUTHENTICATED"
+          },
+          "422": {
+            "description": "ANALYSIS_INPUT_INCOMPLETE"
+          },
+          "501": {
+            "description": "1주 차 계약만 제공"
+          },
+          "503": {
+            "description": "서비스 토큰 미설정"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/ai/v1/policy-indexes": {
+      "post": {
+        "summary": "Policy-Indexes",
+        "operationId": "policy_indexes_ai_v1_policy_indexes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IndexCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndexResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST"
+          },
+          "401": {
+            "description": "UNAUTHENTICATED"
+          },
+          "422": {
+            "description": "ANALYSIS_INPUT_INCOMPLETE"
+          },
+          "501": {
+            "description": "1주 차 계약만 제공"
+          },
+          "503": {
+            "description": "서비스 토큰 미설정"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/ai/v1/policy-indexes/{policy_id}": {
+      "put": {
+        "summary": "Update Index",
+        "operationId": "update_index_ai_v1_policy_indexes__policy_id__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "policy_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Policy Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IndexUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndexResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST"
+          },
+          "401": {
+            "description": "UNAUTHENTICATED"
+          },
+          "422": {
+            "description": "ANALYSIS_INPUT_INCOMPLETE"
+          },
+          "501": {
+            "description": "1주 차 계약만 제공"
+          },
+          "503": {
+            "description": "서비스 토큰 미설정"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Index",
+        "operationId": "delete_index_ai_v1_policy_indexes__policy_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "policy_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Policy Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST"
+          },
+          "401": {
+            "description": "UNAUTHENTICATED"
+          },
+          "422": {
+            "description": "ANALYSIS_INPUT_INCOMPLETE"
+          },
+          "501": {
+            "description": "1주 차 계약만 제공"
+          },
+          "503": {
+            "description": "서비스 토큰 미설정"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalysisSnapshot": {
+        "properties": {
+          "final_status": {
+            "type": "string",
+            "enum": [
+              "ELIGIBLE",
+              "INELIGIBLE",
+              "NEEDS_REVIEW"
+            ],
+            "title": "Final Status"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ConditionResult"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "final_status",
+          "items"
+        ],
+        "title": "AnalysisSnapshot"
+      },
+      "AnswerResponse": {
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "const": "application/json",
+            "title": "Content Type",
+            "default": "application/json"
+          },
+          "result_code": {
+            "type": "integer",
+            "title": "Result Code"
+          },
+          "result_req": {
+            "type": "string",
+            "title": "Result Req",
+            "default": ""
+          },
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "analysis_snapshot": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AnalysisSnapshot"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "references": {
+            "items": {
+              "$ref": "#/components/schemas/Reference"
+            },
+            "type": "array",
+            "title": "References"
+          },
+          "response_time_ms": {
+            "type": "integer",
+            "title": "Response Time Ms"
+          },
+          "quality_status": {
+            "type": "string",
+            "enum": [
+              "NORMAL",
+              "NEEDS_REVIEW"
+            ],
+            "title": "Quality Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_code",
+          "answer",
+          "analysis_snapshot",
+          "references",
+          "response_time_ms",
+          "quality_status"
+        ],
+        "title": "AnswerResponse"
+      },
+      "Benefit": {
+        "properties": {
+          "benefit_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Benefit Id"
+          },
+          "policy_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Id"
+          },
+          "benefit_status": {
+            "type": "string",
+            "enum": [
+              "CURRENT",
+              "PAST"
+            ],
+            "title": "Benefit Status"
+          },
+          "benefit_start_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benefit Start Date"
+          },
+          "benefit_end_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benefit End Date"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "benefit_id",
+          "policy_id",
+          "benefit_status"
+        ],
+        "title": "Benefit"
+      },
+      "Condition": {
+        "properties": {
+          "eligibility_condition_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eligibility Condition Id"
+          },
+          "condition_type": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Condition Type"
+          },
+          "operator": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Operator"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "value_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Min"
+          },
+          "value_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Max"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "requires_manual_check": {
+            "type": "boolean",
+            "title": "Requires Manual Check"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "condition_type",
+          "operator",
+          "description",
+          "requires_manual_check"
+        ],
+        "title": "Condition"
+      },
+      "ConditionResult": {
+        "properties": {
+          "eligibility_condition_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eligibility Condition Id"
+          },
+          "condition_type": {
+            "type": "string",
+            "title": "Condition Type"
+          },
+          "result": {
+            "type": "string",
+            "enum": [
+              "SATISFIED",
+              "UNSATISFIED",
+              "NEEDS_REVIEW"
+            ],
+            "title": "Result"
+          },
+          "user_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Value"
+          },
+          "policy_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Policy Value"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "condition_type",
+          "result",
+          "user_value",
+          "policy_value",
+          "reason"
+        ],
+        "title": "ConditionResult"
+      },
+      "DeleteResponse": {
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "const": "application/json",
+            "title": "Content Type",
+            "default": "application/json"
+          },
+          "result_code": {
+            "type": "integer",
+            "title": "Result Code"
+          },
+          "result_req": {
+            "type": "string",
+            "title": "Result Req",
+            "default": ""
+          },
+          "deleted": {
+            "type": "boolean",
+            "title": "Deleted"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_code",
+          "deleted"
+        ],
+        "title": "DeleteResponse"
+      },
+      "Document": {
+        "properties": {
+          "document_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Document Id"
+          },
+          "document_title": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Document Title"
+          },
+          "policy_text": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Text"
+          },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Name"
+          },
+          "source_url": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Source Url"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "document_id",
+          "document_title",
+          "policy_text",
+          "source_url"
+        ],
+        "title": "Document"
+      },
+      "DuplicateItem": {
+        "properties": {
+          "benefit_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Benefit Id"
+          },
+          "policy_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Id"
+          },
+          "result": {
+            "type": "string",
+            "enum": [
+              "AVAILABLE",
+              "RESTRICTED",
+              "NEEDS_REVIEW"
+            ],
+            "title": "Result"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "source_info": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Info"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "benefit_id",
+          "policy_id",
+          "result",
+          "reason"
+        ],
+        "title": "DuplicateItem"
+      },
+      "DuplicateRequest": {
+        "properties": {
+          "user_conditions": {
+            "$ref": "#/components/schemas/UserConditions"
+          },
+          "benefits": {
+            "items": {
+              "$ref": "#/components/schemas/Benefit"
+            },
+            "type": "array",
+            "title": "Benefits"
+          },
+          "policies": {
+            "items": {
+              "$ref": "#/components/schemas/Policy"
+            },
+            "type": "array",
+            "title": "Policies"
+          },
+          "target_policy_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Target Policy Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "user_conditions",
+          "benefits",
+          "policies",
+          "target_policy_id"
+        ],
+        "title": "DuplicateRequest"
+      },
+      "DuplicateResponse": {
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "const": "application/json",
+            "title": "Content Type",
+            "default": "application/json"
+          },
+          "result_code": {
+            "type": "integer",
+            "title": "Result Code"
+          },
+          "result_req": {
+            "type": "string",
+            "title": "Result Req",
+            "default": ""
+          },
+          "final_status": {
+            "type": "string",
+            "enum": [
+              "AVAILABLE",
+              "RESTRICTED",
+              "NEEDS_REVIEW"
+            ],
+            "title": "Final Status"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DuplicateItem"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_code",
+          "final_status",
+          "items"
+        ],
+        "title": "DuplicateResponse"
+      },
+      "EligibilityRequest": {
+        "properties": {
+          "user_conditions": {
+            "$ref": "#/components/schemas/UserConditions"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/Policy"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "user_conditions",
+          "policy"
+        ],
+        "title": "EligibilityRequest"
+      },
+      "EligibilityResponse": {
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "const": "application/json",
+            "title": "Content Type",
+            "default": "application/json"
+          },
+          "result_code": {
+            "type": "integer",
+            "title": "Result Code"
+          },
+          "result_req": {
+            "type": "string",
+            "title": "Result Req",
+            "default": ""
+          },
+          "final_status": {
+            "type": "string",
+            "enum": [
+              "ELIGIBLE",
+              "INELIGIBLE",
+              "NEEDS_REVIEW"
+            ],
+            "title": "Final Status"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ConditionResult"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_code",
+          "final_status",
+          "items"
+        ],
+        "title": "EligibilityResponse"
+      },
+      "IndexCreate": {
+        "properties": {
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/Document"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Documents"
+          },
+          "source_version": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Source Version"
+          },
+          "policy_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "documents",
+          "source_version",
+          "policy_id"
+        ],
+        "title": "IndexCreate"
+      },
+      "IndexResponse": {
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "const": "application/json",
+            "title": "Content Type",
+            "default": "application/json"
+          },
+          "result_code": {
+            "type": "integer",
+            "title": "Result Code"
+          },
+          "result_req": {
+            "type": "string",
+            "title": "Result Req",
+            "default": ""
+          },
+          "policy_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Id"
+          },
+          "source_version": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Source Version"
+          },
+          "indexed_document_count": {
+            "type": "integer",
+            "title": "Indexed Document Count"
+          },
+          "chunk_count": {
+            "type": "integer",
+            "title": "Chunk Count"
+          },
+          "status": {
+            "type": "string",
+            "const": "COMPLETED",
+            "title": "Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_code",
+          "policy_id",
+          "source_version",
+          "indexed_document_count",
+          "chunk_count",
+          "status"
+        ],
+        "title": "IndexResponse"
+      },
+      "IndexUpdate": {
+        "properties": {
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/Document"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Documents"
+          },
+          "source_version": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Source Version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "documents",
+          "source_version"
+        ],
+        "title": "IndexUpdate"
+      },
+      "PersonalizedRequest": {
+        "properties": {
+          "stage": {
+            "type": "string",
+            "const": "ANSWER",
+            "title": "Stage"
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Question"
+          },
+          "consultation_type": {
+            "type": "string",
+            "const": "PERSONALIZED",
+            "title": "Consultation Type"
+          },
+          "references": {
+            "items": {
+              "$ref": "#/components/schemas/Reference"
+            },
+            "type": "array",
+            "title": "References"
+          },
+          "user_conditions": {
+            "$ref": "#/components/schemas/UserConditions"
+          },
+          "benefits": {
+            "items": {
+              "$ref": "#/components/schemas/Benefit"
+            },
+            "type": "array",
+            "title": "Benefits"
+          },
+          "policies": {
+            "items": {
+              "$ref": "#/components/schemas/Policy"
+            },
+            "type": "array",
+            "title": "Policies"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "stage",
+          "question",
+          "consultation_type",
+          "references",
+          "user_conditions",
+          "benefits",
+          "policies"
+        ],
+        "title": "PersonalizedRequest"
+      },
+      "Policy": {
+        "properties": {
+          "policy_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Id"
+          },
+          "category_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Id"
+          },
+          "policy_name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Name"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "support_content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Support Content"
+          },
+          "target_description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Description"
+          },
+          "organization": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Organization"
+          },
+          "application_start_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Application Start Date"
+          },
+          "application_end_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Application End Date"
+          },
+          "application_method": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Application Method"
+          },
+          "application_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Application Url"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "verification_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verification Status"
+          },
+          "eligibility_conditions": {
+            "items": {
+              "$ref": "#/components/schemas/Condition"
+            },
+            "type": "array",
+            "title": "Eligibility Conditions"
+          },
+          "duplicate_restrictions": {
+            "items": {
+              "$ref": "#/components/schemas/Restriction"
+            },
+            "type": "array",
+            "title": "Duplicate Restrictions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "policy_id",
+          "policy_name",
+          "eligibility_conditions",
+          "duplicate_restrictions"
+        ],
+        "title": "Policy"
+      },
+      "QARequest": {
+        "properties": {
+          "stage": {
+            "type": "string",
+            "const": "ANSWER",
+            "title": "Stage"
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Question"
+          },
+          "consultation_type": {
+            "type": "string",
+            "const": "POLICY_QA",
+            "title": "Consultation Type"
+          },
+          "references": {
+            "items": {
+              "$ref": "#/components/schemas/Reference"
+            },
+            "type": "array",
+            "title": "References"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "stage",
+          "question",
+          "consultation_type",
+          "references"
+        ],
+        "title": "QARequest"
+      },
+      "RecommendationItem": {
+        "properties": {
+          "policy_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Id"
+          },
+          "rank_order": {
+            "type": "integer",
+            "title": "Rank Order"
+          },
+          "recommendation_reason": {
+            "type": "string",
+            "title": "Recommendation Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "policy_id",
+          "rank_order",
+          "recommendation_reason"
+        ],
+        "title": "RecommendationItem"
+      },
+      "RecommendationRequest": {
+        "properties": {
+          "user_conditions": {
+            "$ref": "#/components/schemas/UserConditions"
+          },
+          "benefits": {
+            "items": {
+              "$ref": "#/components/schemas/Benefit"
+            },
+            "type": "array",
+            "title": "Benefits"
+          },
+          "policies": {
+            "items": {
+              "$ref": "#/components/schemas/Policy"
+            },
+            "type": "array",
+            "title": "Policies"
+          },
+          "interest_category_ids": {
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": "array",
+            "title": "Interest Category Ids"
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "default": 5
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "user_conditions",
+          "benefits",
+          "policies"
+        ],
+        "title": "RecommendationRequest"
+      },
+      "RecommendationResponse": {
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "const": "application/json",
+            "title": "Content Type",
+            "default": "application/json"
+          },
+          "result_code": {
+            "type": "integer",
+            "title": "Result Code"
+          },
+          "result_req": {
+            "type": "string",
+            "title": "Result Req",
+            "default": ""
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RecommendationItem"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_code",
+          "items"
+        ],
+        "title": "RecommendationResponse"
+      },
+      "Reference": {
+        "properties": {
+          "policy_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Id"
+          },
+          "document_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Document Id"
+          },
+          "evidence_text": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Evidence Text"
+          },
+          "source_url": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Source Url"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "policy_id",
+          "document_id",
+          "evidence_text",
+          "source_url"
+        ],
+        "title": "Reference"
+      },
+      "Restriction": {
+        "properties": {
+          "restriction_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Restriction Id"
+          },
+          "target_policy_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Policy Id"
+          },
+          "restriction_type": {
+            "type": "string",
+            "enum": [
+              "SPECIFIC_POLICY",
+              "PROGRAM_TYPE",
+              "SIMULTANEOUS"
+            ],
+            "title": "Restriction Type"
+          },
+          "target_program_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Program Type"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "exception_condition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exception Condition"
+          },
+          "source_info": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Info"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "restriction_type",
+          "reason"
+        ],
+        "title": "Restriction"
+      },
+      "ScenarioRequest": {
+        "properties": {
+          "before_conditions": {
+            "$ref": "#/components/schemas/UserConditions"
+          },
+          "after_conditions": {
+            "$ref": "#/components/schemas/UserConditions"
+          },
+          "benefits": {
+            "items": {
+              "$ref": "#/components/schemas/Benefit"
+            },
+            "type": "array",
+            "title": "Benefits"
+          },
+          "policies": {
+            "items": {
+              "$ref": "#/components/schemas/Policy"
+            },
+            "type": "array",
+            "title": "Policies"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "before_conditions",
+          "after_conditions",
+          "benefits",
+          "policies"
+        ],
+        "title": "ScenarioRequest"
+      },
+      "ScenarioResponse": {
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "const": "application/json",
+            "title": "Content Type",
+            "default": "application/json"
+          },
+          "result_code": {
+            "type": "integer",
+            "title": "Result Code"
+          },
+          "result_req": {
+            "type": "string",
+            "title": "Result Req",
+            "default": ""
+          },
+          "before_results": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioResult"
+            },
+            "type": "array",
+            "title": "Before Results"
+          },
+          "after_results": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioResult"
+            },
+            "type": "array",
+            "title": "After Results"
+          },
+          "newly_eligible_policy_ids": {
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": "array",
+            "title": "Newly Eligible Policy Ids"
+          },
+          "no_longer_eligible_policy_ids": {
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": "array",
+            "title": "No Longer Eligible Policy Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_code",
+          "before_results",
+          "after_results",
+          "newly_eligible_policy_ids",
+          "no_longer_eligible_policy_ids"
+        ],
+        "title": "ScenarioResponse"
+      },
+      "ScenarioResult": {
+        "properties": {
+          "final_status": {
+            "type": "string",
+            "enum": [
+              "ELIGIBLE",
+              "INELIGIBLE",
+              "NEEDS_REVIEW"
+            ],
+            "title": "Final Status"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ConditionResult"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "policy_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "final_status",
+          "items",
+          "policy_id"
+        ],
+        "title": "ScenarioResult"
+      },
+      "SearchRequest": {
+        "properties": {
+          "stage": {
+            "type": "string",
+            "const": "SEARCH",
+            "title": "Stage"
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Question"
+          },
+          "consultation_type": {
+            "type": "string",
+            "enum": [
+              "POLICY_QA",
+              "PERSONALIZED"
+            ],
+            "title": "Consultation Type"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "stage",
+          "question",
+          "consultation_type"
+        ],
+        "title": "SearchRequest"
+      },
+      "SearchResponse": {
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "const": "application/json",
+            "title": "Content Type",
+            "default": "application/json"
+          },
+          "result_code": {
+            "type": "integer",
+            "title": "Result Code"
+          },
+          "result_req": {
+            "type": "string",
+            "title": "Result Req",
+            "default": ""
+          },
+          "policy_ids": {
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": "array",
+            "title": "Policy Ids"
+          },
+          "references": {
+            "items": {
+              "$ref": "#/components/schemas/Reference"
+            },
+            "type": "array",
+            "title": "References"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_code",
+          "policy_ids",
+          "references"
+        ],
+        "title": "SearchResponse"
+      },
+      "UserConditions": {
+        "properties": {
+          "birth_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Birth Date"
+          },
+          "region_code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{2}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Code"
+          },
+          "income_level": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "LE_50",
+                  "GT_50_LE_75",
+                  "GT_75_LE_100",
+                  "GT_100_LE_120",
+                  "GT_120_LE_150",
+                  "GT_150"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Income Level"
+          },
+          "education_level": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "HIGH_SCHOOL_OR_LESS",
+                  "COLLEGE",
+                  "UNIVERSITY",
+                  "GRADUATE_SCHOOL",
+                  "OTHER"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Education Level"
+          },
+          "employment_status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "UNEMPLOYED",
+                  "EMPLOYED",
+                  "SELF_EMPLOYED",
+                  "STUDENT",
+                  "OTHER"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Employment Status"
+          },
+          "marital_status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "SINGLE",
+                  "MARRIED",
+                  "OTHER"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marital Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "UserConditions"
+      },
+      "VerificationIssue": {
+        "properties": {
+          "field": {
+            "type": "string",
+            "title": "Field"
+          },
+          "condition_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Condition Type"
+          },
+          "issue_type": {
+            "type": "string",
+            "title": "Issue Type"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "evidence": {
+            "type": "string",
+            "title": "Evidence"
+          },
+          "document_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Document Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "field",
+          "issue_type",
+          "status",
+          "description",
+          "evidence",
+          "document_id"
+        ],
+        "title": "VerificationIssue"
+      },
+      "VerificationRequest": {
+        "properties": {
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/Document"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Documents"
+          },
+          "source_version": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Source Version"
+          },
+          "policy_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Id"
+          },
+          "eligibility_conditions": {
+            "items": {
+              "$ref": "#/components/schemas/Condition"
+            },
+            "type": "array",
+            "title": "Eligibility Conditions"
+          },
+          "duplicate_restrictions": {
+            "items": {
+              "$ref": "#/components/schemas/Restriction"
+            },
+            "type": "array",
+            "title": "Duplicate Restrictions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "documents",
+          "source_version",
+          "policy_id",
+          "eligibility_conditions",
+          "duplicate_restrictions"
+        ],
+        "title": "VerificationRequest"
+      },
+      "VerificationResponse": {
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "const": "application/json",
+            "title": "Content Type",
+            "default": "application/json"
+          },
+          "result_code": {
+            "type": "integer",
+            "title": "Result Code"
+          },
+          "result_req": {
+            "type": "string",
+            "title": "Result Req",
+            "default": ""
+          },
+          "policy_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Policy Id"
+          },
+          "source_version": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Source Version"
+          },
+          "verification_status": {
+            "type": "string",
+            "enum": [
+              "VERIFIED",
+              "PENDING_REVIEW"
+            ],
+            "title": "Verification Status"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/VerificationIssue"
+            },
+            "type": "array",
+            "title": "Issues"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_code",
+          "policy_id",
+          "source_version",
+          "verification_status",
+          "issues"
+        ],
+        "title": "VerificationResponse"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
