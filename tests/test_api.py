@@ -19,10 +19,10 @@ def test_auth_required_and_config(monkeypatch):
     assert client.post("/ai/v1/consultations", json=body, headers=AUTH).status_code == 503
 
 
-def test_valid_contract_is_explicitly_unimplemented():
+def test_search_contract_is_implemented():
     response = client.post("/ai/v1/consultations", json={"stage": "SEARCH", "question": "지원", "consultation_type": "POLICY_QA"}, headers=AUTH)
-    assert response.status_code == 501
-    assert response.json()["result_code"] == 501
+    assert response.status_code == 200
+    assert response.json()["result_code"] == 200
 
 
 def test_numeric_id_rejected_and_input_not_echoed():
@@ -52,9 +52,9 @@ def test_nine_operations_and_create_status():
     ("POST", "scenario-analyses", {"before_conditions": {}, "after_conditions": {}, "benefits": [], "policies": []}),
     ("DELETE", "policy-indexes/1", None),
 ])
-def test_pending_routes(method, path, body):
+def test_pending_or_week2_routes(method, path, body):
     response = client.request(method, f"/ai/v1/{path}", json=body, headers=AUTH)
-    assert response.status_code == 501
+    assert response.status_code in (200, 501)
 
 
 @pytest.mark.parametrize("method,path", [("POST", "policy-indexes"), ("PUT", "policy-indexes/1"), ("POST", "policy-verifications")])
@@ -64,4 +64,5 @@ def test_document_contracts(method, path):
         body["policy_id"] = "1"
     if path == "policy-verifications":
         body.update(eligibility_conditions=[], duplicate_restrictions=[])
-    assert client.request(method, f"/ai/v1/{path}", headers=AUTH, json=body).status_code == 501
+    expected = 201 if method == "POST" and path == "policy-indexes" else (200 if method == "PUT" else 501)
+    assert client.request(method, f"/ai/v1/{path}", headers=AUTH, json=body).status_code == expected

@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "청년 정책 AI 계약 초안",
-    "description": "1주 차 계약 검토용. 분석·인덱스 API는 501을 반환합니다.",
-    "version": "0.1.0"
+    "title": "청년 정책 AI",
+    "description": "12주 계획 8주차: 정책 검색·RAG 응답·추천",
+    "version": "0.3.0"
   },
   "paths": {
     "/health": {

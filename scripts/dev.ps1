@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('test', 'serve', 'collect', 'import', 'export-contract', 'probe-llm')]
+[ValidateSet('test', 'serve', 'collect', 'import', 'export-contract', 'probe-llm', 'prepare-week1', 'validate-labels', 'build-index', 'search')]
     [string]$Command = 'test',
     [Parameter(ValueFromRemainingArguments=$true)]
     [string[]]$ExtraArgs

@@ -8,3 +8,5 @@ tmp/
 data/runs/
 data/state.sqlite3*
 data/week1/
+data/week2/
+output/

@@ -6,6 +6,8 @@ from datetime import datetime
 from html.parser import HTMLParser
 from urllib.parse import urlparse
 
+from .codebook import BACKEND_MAP, VERSION as CODEBOOK_VERSION, describe_codes
+
 
 class PlainText(HTMLParser):
     def __init__(self):
@@ -88,13 +90,6 @@ def normalize(raw):
         condition("AGE", age_fields, "BETWEEN", int(low), int(high))
     else:
         condition("AGE", age_fields)
-    code_map = {
-        "mrgSttsCd": {"0055001": "MARRIED", "0055002": "SINGLE", "0055003": "ANY"},
-        "jobCd": {"0013001": "EMPLOYED", "0013002": "SELF_EMPLOYED", "0013003": "UNEMPLOYED", "0013010": "ANY"},
-        # Graduation/enrollment cannot be represented by the coarser backend education enum.
-        "schoolCd": {"0049010": "ANY"},
-        "earnCndSeCd": {"0043001": "ANY"},
-    }
     for kind, fields in {
         "REGION": ["zipCd"],
         "INCOME": ["earnCndSeCd", "earnMinAmt", "earnMaxAmt", "earnEtcCn"],
@@ -103,7 +98,7 @@ def normalize(raw):
         "MARITAL_STATUS": ["mrgSttsCd"],
     }.items():
         raw_value = clean(raw.get(fields[0]))
-        mapped = code_map.get(fields[0], {}).get(raw_value)
+        mapped = BACKEND_MAP.get(fields[0], {}).get(raw_value)
         has_exception = any(clean(raw.get(field)) for field in ("addAplyQlfcCndCn", "ptcpPrpTrgtCn", "etcMttrCn"))
         if kind == "INCOME":
             has_exception = has_exception or bool(clean(raw.get("earnEtcCn"))) or any(
@@ -116,13 +111,21 @@ def normalize(raw):
             condition(kind, fields, operator="EQ", value=mapped, manual=has_exception)
         else:
             condition(kind, fields, value=raw_value)
-    text_fields = ["plcyNm", "plcyExplnCn", "plcySprtCn", *age_fields, "zipCd", "earnCndSeCd", "earnMinAmt", "earnMaxAmt", "earnEtcCn", "schoolCd", "jobCd", "mrgSttsCd", "ptcpPrpTrgtCn", "etcMttrCn", "aplyYmd", "bizPrdBgngYmd", "bizPrdEndYmd", "plcyAplyMthdCn"]
+    text_fields = ["plcyNm", "plcyExplnCn", "plcySprtCn", *age_fields, "zipCd", "earnCndSeCd", "earnMinAmt", "earnMaxAmt", "earnEtcCn", "schoolCd", "jobCd", "mrgSttsCd", "ptcpPrpTrgtCn", "etcMttrCn", "aplyPrdSeCd", "aplyYmd", "bizPrdBgngYmd", "bizPrdEndYmd", "bizPrdEtcCn", "plcyAplyMthdCn", "aplyUrlAddr", "sprvsnInstCdNm", "sbmsnDcmntCn", "srngMthdCn"]
     policy_text = "\n".join(f"{k}: {clean(raw.get(k))}" for k in dict.fromkeys(text_fields) if clean(raw.get(k)) is not None)
     if not clean(raw.get("plcySprtCn")):
         issues.append({"field": "support_content", "reason": "MISSING_SUPPORT_CONTENT"})
     issues.append({"field": "duplicate_restrictions", "reason": "REQUIRES_SOURCE_REVIEW"})
+    periods, period_issue = parse_periods(raw.get("aplyYmd"))
+    if period_issue or (not periods and raw.get("aplyPrdSeCd") == "0057001"):
+        issues.append({"field": "application_periods", "reason": period_issue or "MISSING_FIXED_PERIOD"})
+    code_details = describe_codes(raw)
+    for field, details in code_details.items():
+        if any(d["label"] is None for d in details):
+            issues.append({"field": field, "reason": "UNKNOWN_PROVIDER_CODE"})
     return {
-        "policy_id": policy_id, "policy_name": name, "normalizer_version": "1.3",
+        "policy_id": policy_id, "policy_name": name, "normalizer_version": "1.4",
+        "codebook_version": CODEBOOK_VERSION, "provider_codes": code_details,
         "keywords": stable.get("plcyKywdNm", []),
         "summary": clean(raw.get("plcyExplnCn")), "support_content": clean(raw.get("plcySprtCn")),
         "category_names": [v for k in ("lclsfNm", "mclsfNm") if (v := clean(raw.get(k)))],
@@ -130,6 +133,9 @@ def normalize(raw):
         "application_method": clean(raw.get("plcyAplyMthdCn")),
         "application_url": raw.get("aplyUrlAddr") if valid_url(raw.get("aplyUrlAddr")) else None,
         "application_period_raw": clean(raw.get("aplyYmd")),
+        "application_periods": periods,
+        "application_start_date": periods[0]["start_date"] if len(periods) == 1 else None,
+        "application_end_date": periods[0]["end_date"] if len(periods) == 1 else None,
         "application_period_type": {"0057001": "FIXED", "0057002": "ALWAYS", "0057003": "CLOSED"}.get(clean(raw.get("aplyPrdSeCd")), "UNKNOWN"),
         "support_period_raw": {k: clean(raw.get(k)) for k in ("bizPrdBgngYmd", "bizPrdEndYmd")},
         "support_start_date": parse_date(raw.get("bizPrdBgngYmd")),
@@ -143,6 +149,25 @@ def normalize(raw):
         "duplicate_restrictions": None, "verification_status": "PENDING_REVIEW",
         "review_issues": issues,
     }
+
+
+def parse_periods(value):
+    """Only exact dated intervals; never infer a missing year or collapse gaps."""
+    text = clean(value)
+    if not text:
+        return [], None
+    pattern = r"(\d{8}|\d{4}-\d{2}-\d{2})\s*~\s*(\d{8}|\d{4}-\d{2}-\d{2})"
+    matches = list(re.finditer(pattern, text))
+    remainder = re.sub(pattern, "", text).strip(" ,;|")
+    if not matches or remainder:
+        return [], "UNPARSED_APPLICATION_PERIOD"
+    periods = []
+    for match in matches:
+        start, end = (parse_date(v) for v in match.groups())
+        if not start or not end or start > end:
+            return [], "INVALID_APPLICATION_PERIOD"
+        periods.append({"start_date": start, "end_date": end})
+    return sorted(periods, key=lambda p: p["start_date"]), None
 
 
 def parse_date(value):

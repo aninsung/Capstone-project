@@ -12,7 +12,7 @@ from .pipeline import CollectionError, collect, parse_page, process, write_json
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Week 1 policy ingestion")
+    parser = argparse.ArgumentParser(description="4주 정책 AI 구현 도구")
     sub = parser.add_subparsers(dest="command", required=True)
     for name in ("collect", "import"):
         cmd = sub.add_parser(name)
@@ -26,6 +26,18 @@ def main(argv=None):
             cmd.add_argument("--fixture", action="store_true", help="Mark test data explicitly")
     sub.add_parser("export-contract")
     sub.add_parser("probe-llm")
+    handoff = sub.add_parser("prepare-week1")
+    handoff.add_argument("--run", type=Path, required=True)
+    labels = sub.add_parser("validate-labels")
+    labels.add_argument("--run", type=Path, required=True)
+    labels.add_argument("--file", type=Path, required=True)
+    index = sub.add_parser("build-index", help="정규화 정책을 로컬 벡터 인덱스에 적재")
+    index.add_argument("--run", type=Path, required=True)
+    index.add_argument("--db", type=Path, default=Path("data/week2/vector.sqlite3"))
+    search = sub.add_parser("search", help="벡터 인덱스 검색")
+    search.add_argument("--db", type=Path, default=Path("data/week2/vector.sqlite3"))
+    search.add_argument("--query", required=True)
+    search.add_argument("--top-k", type=int, default=5)
     args = parser.parse_args(argv)
     try:
         if args.command == "export-contract":
@@ -35,6 +47,26 @@ def main(argv=None):
             return 0
         if args.command == "probe-llm":
             return probe_llm()
+        if args.command == "prepare-week1":
+            from .handoff import prepare_handoff
+            output, audit = prepare_handoff(args.run)
+            print(json.dumps({"output": str(output), "audit": audit}, ensure_ascii=False, indent=2))
+            return 0 if not audit["structural_errors"] else 2
+        if args.command == "validate-labels":
+            from .handoff import validate_labels
+            result = validate_labels(json.loads(args.file.read_text("utf-8")), json.loads((args.run / "normalized.json").read_text("utf-8")))
+            print(json.dumps(result))
+            return 0
+        if args.command == "build-index":
+            from .vector_store import VectorStore
+            result = VectorStore(args.db).index_normalized(args.run / "normalized.json")
+            print(json.dumps({"db": str(args.db), **result}, ensure_ascii=False))
+            return 0
+        if args.command == "search":
+            from .vector_store import VectorStore
+            hits = VectorStore(args.db).search(args.query, args.top_k)
+            print(json.dumps([h.__dict__ for h in hits], ensure_ascii=False))
+            return 0
         if not 1 <= args.target <= 300:
             raise CollectionError("INVALID_COLLECTION_LIMIT")
         root = Path(args.output)
@@ -67,7 +99,9 @@ def main(argv=None):
 
 def probe_llm():
     """Smoke probe for a configured Chat Completions-compatible provider."""
-    key, base, model = (os.getenv(k, "") for k in ("LLM_API_KEY", "LLM_BASE_URL", "LLM_MODEL"))
+    key = os.getenv("LLM_API_KEY", "")
+    base = os.getenv("LLM_BASE_URL", "https://api.groq.com/openai/v1")
+    model = os.getenv("LLM_MODEL", "openai/gpt-oss-20b")
     result = {"checked_at": datetime.now(timezone.utc).isoformat(), "status": "NOT_CONFIGURED", "model": model or None}
     if key and base and model:
         if not base.startswith("https://"):
